@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyMove : MonoBehaviour
+public class EnemyMove : MonoBehaviour, IDamageable
 {
     [Header("Navigation Settings")]
     NavMeshAgent agent;
@@ -24,9 +24,22 @@ public class EnemyMove : MonoBehaviour
     [Header("State Machine Settings")]
     public State currentState;
 
+    [Header("Attack Settings")]
+    public GameObject bulletPrefab;
+    public float rps = 1/2f;
+    public float bulletSpeed = 10f;
+    public Transform bulletSpawnPos;
+    private float lastShot = 0;
+    public float attackRange = 10f;
+
+    [Header("HP Settings")]
+    public float maxHP = 100;
+    public float currentHP;
+
     // Start is called before the first frame update
     void Start()
     {
+        currentHP = maxHP;
         agent = GetComponent<NavMeshAgent>();
         currentState = State.patrol;
         target = GameObject.FindGameObjectWithTag("Player").transform;
@@ -40,8 +53,16 @@ public class EnemyMove : MonoBehaviour
         {
             currentState = State.hunt;
             lastKnownPos = target.position;
-            agent.SetDestination(lastKnownPos);
+
             //Check for attack state
+            if(agent.remainingDistance < attackRange)
+            {
+                currentState = State.attack;
+            }
+            else
+            {
+                agent.SetDestination(lastKnownPos);
+            }
         }
         else if (currentState != State.patrol)
         {
@@ -49,6 +70,16 @@ public class EnemyMove : MonoBehaviour
         }
 
         //add attack state
+        if (currentState == State.attack)
+        {
+            if (!DetectedPlayer())
+            {
+                currentState = State.searching;
+            }
+//            agent.stoppingDistance = attackRange/2f;
+            agent.SetDestination(lastKnownPos);
+            RangeAttack();
+        }
 
         if (currentState == State.searching)
         {
@@ -69,6 +100,13 @@ public class EnemyMove : MonoBehaviour
     public void RangeAttack()
     {
         //input range attack code
+        if(lastShot + rps < Time.time)
+        {
+            GameObject tempBullet = Instantiate(bulletPrefab, bulletSpawnPos.position, Quaternion.identity);
+            tempBullet.GetComponent<Rigidbody>().velocity = bulletSpawnPos.forward * bulletSpeed;
+            lastShot = Time.time;
+
+        }
     }
     private void Searching()
     {
@@ -113,5 +151,13 @@ public class EnemyMove : MonoBehaviour
         }
         return waypointIndex;
     }
-    
+
+    public void TakeDamage(float damageAmount)
+    {
+        //implement damage
+        currentHP -= damageAmount;
+        if (currentHP <= 0) {
+            Destroy(gameObject);
+        }
+    }
 }
