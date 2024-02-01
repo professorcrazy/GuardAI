@@ -5746,10 +5746,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8677209643603604742, guid: 40a5a37168cec1241ac9c10ff88c6f16, type: 3}
-      propertyPath: playerLayer.m_Bits
-      value: 64
-      objectReference: {fileID: 0}
-    - target: {fileID: 8677209643603604742, guid: 40a5a37168cec1241ac9c10ff88c6f16, type: 3}
       propertyPath: waypoints.Array.data[0]
       value: 
       objectReference: {fileID: 1050383799}

@@ -355,14 +355,14 @@ MonoBehaviour:
   - {fileID: 0}
   stoppingDistance: 2
   viewDist: 20
-  rpm: 0.5
-  bulletSpeed: 10
+  currentState: 0
   bulletPrefab: {fileID: 4913844578165732412, guid: e2fd70b4af5b02a449a1bb483a7c87ad, type: 3}
+  rps: 0.5
+  bulletSpeed: 10
   bulletSpawnPos: {fileID: 3322105154363162687}
+  attackRange: 10
   maxHP: 100
   currentHP: 0
-  currentState: 0
-  rangeAttackDistance: 5
 --- !u!1 &3667552719194194545
 GameObject:
   m_ObjectHideFlags: 0
